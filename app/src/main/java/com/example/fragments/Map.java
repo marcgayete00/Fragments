@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ public class Map extends Fragment {
 
     private MapView mMapView;
     private EditText input;
+    private Button search;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,10 +29,12 @@ public class Map extends Fragment {
         // Obtener la referencia al MapView
         mMapView = rootView.findViewById(R.id.map_view);
         input = rootView.findViewById(R.id.input);
+        search = rootView.findViewById(R.id.search_button);
         String text = input.getText().toString();
 
         // Inicializar el mapa
         mMapView.onCreate(savedInstanceState);
+
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
