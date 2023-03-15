@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Fragments</string>
+    <string name="buttonPlaceholder">Map</string>
+    <string name="buttonPlaceholder2">Weather</string>
+</resources>
