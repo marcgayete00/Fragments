@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-
+    //private MainActivity mainActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
                         return true;
                     case R.id.menu_weather:
+                        Weather weatherFragment = new Weather(/*mainActivity*/);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, weatherFragment).commit();
                         // Acción al seleccionar el elemento Weather
                         return true;
                     default:
