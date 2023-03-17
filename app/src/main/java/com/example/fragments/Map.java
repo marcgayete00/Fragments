@@ -9,6 +9,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,9 @@ public class Map extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //ocultar imagen de fondo
+        getActivity().findViewById(R.id.imageView).setVisibility(View.GONE);
+
         // Inflar el archivo de layout para este fragmento
         View rootView = inflater.inflate(R.layout.menu_maps, container, false);
 
@@ -70,44 +74,45 @@ public class Map extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 // Configurar el mapa
-                LatLng location = new LatLng(40.416775, -3.703790); // Ubicación predeterminada (Madrid, España)
-                googleMap.addMarker(new MarkerOptions().position(location).title("Ubicación predeterminada"));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10)); // Zoom inicial de 10
-
+    /*
+    LatLng location = new LatLng(40.416775, -3.703790); // Ubicación predeterminada (Madrid, España)
+    googleMap.addMarker(new MarkerOptions().position(location).title("Ubicación predeterminada"));
+    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10)); // Zoom inicial de 10
+    */
                 //Obtener ubicacion del dispisitivo
-                /*
-                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                Location locationDevice = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (locationDevice != null) {
-                    LatLng currentLocation = new LatLng(locationDevice.getLatitude(), locationDevice.getLongitude());
-                    googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Ubicación actual"));
+                Location location1 = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (location1 != null) {
+                    LatLng latLng = new LatLng(location1.getLatitude(), location1.getLongitude());
+                    googleMap.addMarker(new MarkerOptions().position(latLng).title("Ubicación actual"));
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 200)); // Zoom inicial de 10
+                } else {
+                    Log.e("MAP", "No se pudo obtener la ubicación actual.");
                 }
-                 */
-
                 // Agregar listener al botón "search" para ubicar la localidad ingresada en el mapa
-                search.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String text = input.getText().toString(); // Obtener el texto del EditText "input"
-                        List<Address> addresses = searchLocation(text, googleMap);
-                        if (addresses != null && !addresses.isEmpty()) {
-                            Address address = addresses.get(0);
-                            LatLng location = new LatLng(address.getLatitude(), address.getLongitude()); // Crear nuevo objeto LatLng con la latitud y longitud obtenidos
-                            googleMap.clear(); // Limpiar marcadores previos
-                            googleMap.addMarker(new MarkerOptions().position(location).title(text)); // Agregar marcador en la ubicación encontrada
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12)); // Zoom de 12
-                        } else {
-                            // Manejar el caso en que no se encontró ninguna dirección para el texto ingresado
-                        }
+            search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String text = input.getText().toString(); // Obtener el texto del EditText "input"
+                    List<Address> addresses = searchLocation(text, googleMap);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        Address address = addresses.get(0);
+                        LatLng location = new LatLng(address.getLatitude(), address.getLongitude()); // Crear nuevo objeto LatLng con la latitud y longitud obtenidos
+                        googleMap.clear(); // Limpiar marcadores previos
+                        googleMap.addMarker(new MarkerOptions().position(location).title(text)); // Agregar marcador en la ubicación encontrada
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12)); // Zoom de 12
+                    } else {
+                        // Manejar el caso en que no se encontró ninguna dirección para el texto ingresado
                     }
-                });
-            }
-        });
+                }
+            });
+        }
+    });
 
-        return rootView;
+    return rootView;
     }
 
     @Override

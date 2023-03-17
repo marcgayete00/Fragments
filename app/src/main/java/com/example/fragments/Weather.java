@@ -28,7 +28,9 @@ import okhttp3.Response;
 
 public class Weather extends Fragment {
     //private MainActivity mainActivity;
-    private TextView temperature;
+    private TextView countryNameTextView;
+    private TextView descriptionTextView;
+    private TextView temperatureTextView;
 
     // La URL base de la API de OpenWeather
     private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/forecast";
@@ -43,9 +45,12 @@ public class Weather extends Fragment {
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().findViewById(R.id.imageView).setVisibility(View.GONE);
         // Infla la vista raíz utilizando LayoutInflater y establece los estilos del archivo menu_weather
         View rootView = inflater.inflate(R.layout.menu_weather, container, false);
-        temperature = rootView.findViewById(R.id.temperature);
+        countryNameTextView = rootView.findViewById(R.id.CountryName);
+        descriptionTextView = rootView.findViewById(R.id.description);
+        temperatureTextView = rootView.findViewById(R.id.temperature);
 
         // Crea un cliente de OkHttpClient para hacer solicitudes HTTP
         OkHttpClient client = new OkHttpClient();
@@ -63,7 +68,6 @@ public class Weather extends Fragment {
                 Log.e("Weather", "Error making API call", e);
             }
 
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
@@ -75,15 +79,23 @@ public class Weather extends Fragment {
                     // Extrae la temperatura actual de la respuesta JSON
                     JSONArray list = json.getJSONArray("list");
                     JSONObject firstInterval = list.getJSONObject(0);
+                    String countryName = json.getJSONObject("city").getString("name");
                     double temperatureValue = firstInterval.getJSONObject("main").getDouble("temp");
+                    String description = firstInterval.getJSONArray("weather").getJSONObject(0).getString("description");
 
-                    // Actualiza la temperatura en la interfaz de usuario
-                    runOnUiThread(new Runnable() {
+                    // Crea un objeto Country con los valores obtenidos
+                    Country country = new Country(countryName, description, temperatureValue);
+
+                    // Actualiza los valores de los TextView con los valores del objeto Country
+                    getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            temperature.setText(String.valueOf(temperatureValue));
+                            countryNameTextView.setText(country.getCountryName());
+                            descriptionTextView.setText(country.getDescription());
+                            temperatureTextView.setText("Temp: "+country.getTemperature());
                         }
                     });
+
                 } catch (JSONException e) {
                     // Manejo de error en caso de que la respuesta no pueda ser parseada como JSON
                     Log.e("Weather", "Error parsing API response as JSON", e);
