@@ -70,22 +70,17 @@ public class Map extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 // Configurar el mapa
-                LatLng location = new LatLng(40.416775, -3.703790); // Ubicación predeterminada (Madrid, España)
-                googleMap.addMarker(new MarkerOptions().position(location).title("Ubicación predeterminada"));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10)); // Zoom inicial de 10
+                getActivity().findViewById(R.id.imageView).setVisibility(View.GONE);
 
                 //Obtener ubicacion del dispisitivo
-                /*
-                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                Location locationDevice = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (locationDevice != null) {
-                    LatLng currentLocation = new LatLng(locationDevice.getLatitude(), locationDevice.getLongitude());
-                    googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Ubicación actual"));
-                }
-                 */
+                Location location1 = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                LatLng latLng = new LatLng(location1.getLatitude(), location1.getLongitude());
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
 
                 // Agregar listener al botón "search" para ubicar la localidad ingresada en el mapa
                 search.setOnClickListener(new View.OnClickListener() {
