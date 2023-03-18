@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-
+/*
 public class AdapterForeCast extends RecyclerView.Adapter<AdaptadorTexto.ViewHolder> {
     private String[] datos;
 
@@ -40,3 +40,4 @@ public class AdapterForeCast extends RecyclerView.Adapter<AdaptadorTexto.ViewHol
         }
     }
 }
+*/
